@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход и создание объявления</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Страница для входа -->
+    <div id="loginPage">
+        <h1>Вход в аккаунт</h1>
+        <form id="loginForm">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required><br><br>
+
+            <button type="submit">Войти</button>
+        </form>
+        <p id="loginMessage"></p>
+    </div>
+
+    <!-- Страница для создания объявления -->
+    <div id="adCreatePage" style="display: none;">
+        <h1>Создание объявления</h1>
+        <form id="adForm" enctype="multipart/form-data">
+            <label for="adName">Название объявления:</label>
+            <input type="text" id="adName" name="adName" required><br><br>
+
+            <label for="description">Описание:</label>
+            <textarea id="description" name="description" required></textarea><br><br>
+
+            <label for="price">Цена:</label>
+            <input type="number" id="price" name="price" required><br><br>
+
+            <!-- Поле для ввода ID региона -->
+            <label for="regionId">ID региона:</label>
+            <input type="number" id="regionId" name="regionId" required><br><br>
+
+            <!-- Поле для ввода ID категории -->
+            <label for="categoryId">ID категории:</label>
+            <input type="number" id="categoryId" name="categoryId" required><br><br>
+
+            <!-- Поле для ввода ID подкатегории -->
+            <label for="subcategoryId">ID подкатегории:</label>
+            <input type="number" id="subcategoryId" name="subcategoryId" required><br><br>
+
+            <label for="duration">Продолжительность (дни):</label>
+            <input type="number" id="duration" name="duration" min="7" max="180" required><br><br>
+
+            <label for="images">Изображения:</label>
+            <input type="file" id="images" name="images" multiple accept="image/*" required><br><br>
+
+            <button type="submit">Добавить объявление</button>
+        </form>
+        <p id="adMessage"></p>
+        <button onclick="logout()">Выйти</button>
+    </div>
+
+    <script>
+        // Проверка токена при загрузке страницы
+        window.onload = function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                showAdCreatePage();
+            } else {
+                showLoginPage();
+            }
+        };
+
+        // Показ страницы входа
+        function showLoginPage() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('adCreatePage').style.display = 'none';
+        }
+
+        // Показ страницы создания объявления
+        function showAdCreatePage() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('adCreatePage').style.display = 'block';
+        }
+
+        // Обработчик отправки формы входа
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('https://apsnybillboard-production.up.railway.app/api/user/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    // Сохраняем токен в localStorage и переходим на страницу создания объявления
+                    localStorage.setItem('token', data.token);
+                    showAdCreatePage();
+                } else {
+                    document.getElementById('loginMessage').textContent = data.message;
+                }
+            } catch (error) {
+                document.getElementById('loginMessage').textContent = "Ошибка при входе";
+                console.error(error);
+            }
+        });
+
+        // Обработчик отправки формы создания объявления
+        document.getElementById('adForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                document.getElementById('adMessage').textContent = "Необходимо войти в аккаунт";
+                return;
+            }
+
+            try {
+                const response = await fetch('https://apsnybillboard-production.up.railway.app/api/ad', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('adMessage').textContent = "Объявление успешно добавлено!";
+                    console.log(data);
+                } else {
+                    document.getElementById('adMessage').textContent = "Ошибка: " + data.message;
+                }
+            } catch (error) {
+                document.getElementById('adMessage').textContent = "Не удалось добавить объявление";
+                console.error(error);
+            }
+        });
+
+        // Функция выхода из аккаунта
+        function logout() {
+            localStorage.removeItem('token');
+            showLoginPage();
+        }
+    </script>
+
+</body>
+</html>
