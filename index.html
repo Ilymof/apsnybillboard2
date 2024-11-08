@@ -3,62 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход и создание объявления</title>
+    <title>Создание объявления с фотографиями</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="container">
+        
+        <!-- Страница входа -->
+        <div id="loginPage" style="display: none;">
+            <h1>Вход</h1>
+            <form id="loginForm">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
 
-    <!-- Страница для входа -->
-    <div id="loginPage" class="container">
-        <h1>Вход в аккаунт</h1>
-        <form id="loginForm" class="form">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">Войти</button>
+            </form>
+            <p id="loginMessage"></p>
+            <button onclick="showRegistrationPage()">Зарегистрироваться</button>
+        </div>
 
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required>
+        <!-- Страница регистрации -->
+        <div id="registrationPage" style="display: none;">
+            <h1>Регистрация</h1>
+            <form id="registrationForm">
+                <label for="regEmail">Email:</label>
+                <input type="email" id="regEmail" name="email" required>
 
-            <button type="submit" class="button">Войти</button>
-        </form>
-        <p id="loginMessage"></p>
+                <label for="regPassword">Пароль:</label>
+                <input type="password" id="regPassword" name="password" required>
+
+                <label for="phoneNumber">Номер телефона:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" required>
+
+                <label for="firstName">Имя:</label>
+                <input type="text" id="firstName" name="firstName">
+
+                <label for="lastName">Фамилия:</label>
+                <input type="text" id="lastName" name="lastName">
+
+                <label for="telegram">Telegram:</label>
+                <input type="text" id="telegram" name="telegram">
+
+                <label for="whatsapp">WhatsApp:</label>
+                <input type="text" id="whatsapp" name="whatsapp">
+
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+            <p id="registrationMessage"></p>
+        </div>
+
+        <!-- Страница подтверждения кода -->
+        <div id="confirmationPage" style="display: none;">
+            <h1>Подтверждение Email</h1>
+            <form id="confirmationForm">
+                <label for="confirmationCode">Код подтверждения:</label>
+                <input type="text" id="confirmationCode" name="confirmationCode" required>
+                <button type="submit">Подтвердить</button>
+            </form>
+            <p id="confirmationMessage"></p>
+        </div>
+
+        <!-- Страница создания объявления -->
+        <div id="adCreatePage" style="display: none;">
+            <h1>Создание объявления</h1>
+            <form id="adForm" enctype="multipart/form-data">
+                <label for="adName">Название объявления:</label>
+                <input type="text" id="adName" name="adName" required>
+
+                <label for="description">Описание:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <label for="price">Цена:</label>
+                <input type="number" id="price" name="price" required>
+
+                <label for="regionId">Регион:</label>
+                <select id="regionId" name="regionId" required>
+                    <option value="">Выберите регион</option>
+                </select>
+
+                <label for="categoryId">Категория:</label>
+                <select id="categoryId" name="categoryId" required>
+                    <option value="">Выберите категорию</option>
+                </select>
+
+                <label for="subcategoryId">Подкатегория:</label>
+                <select id="subcategoryId" name="subcategoryId" required>
+                    <option value="">Выберите подкатегорию</option>
+                </select>
+
+                <label for="duration">Продолжительность (дни):</label>
+                <input type="number" id="duration" name="duration" min="7" max="180" required>
+
+                <label for="images">Фотографии:</label>
+                <input type="file" id="images" name="images" multiple accept="image/*" required>
+
+                <button type="submit">Добавить объявление</button>
+            </form>
+            <p id="adMessage"></p>
+            <button onclick="logout()">Выйти</button>
+        </div>
+
     </div>
-
-    <!-- Страница для создания объявления -->
-    <div id="adCreatePage" class="container" style="display: none;">
-        <h1>Создание объявления</h1>
-        <form id="adForm" class="form" enctype="multipart/form-data">
-            <label for="adName">Название объявления:</label>
-            <input type="text" id="adName" name="adName" required>
-
-            <label for="description">Описание:</label>
-            <textarea id="description" name="description" required></textarea>
-
-            <label for="price">Цена:</label>
-            <input type="number" id="price" name="price" required>
-
-            <label for="regionId">ID региона:</label>
-            <input type="number" id="regionId" name="regionId" required>
-
-            <label for="categoryId">ID категории:</label>
-            <input type="number" id="categoryId" name="categoryId" required>
-
-            <label for="subcategoryId">ID подкатегории:</label>
-            <input type="number" id="subcategoryId" name="subcategoryId" required>
-
-            <label for="duration">Продолжительность (дни):</label>
-            <input type="number" id="duration" name="duration" min="7" max="180" required>
-
-            <label for="images">Изображения:</label>
-            <input type="file" id="images" name="images" multiple accept="image/*" required>
-
-            <button type="submit" class="button">Добавить объявление</button>
-        </form>
-        <p id="adMessage"></p>
-        <button onclick="logout()" class="button logout">Выйти</button>
-    </div>
-
-    <script src="script.js"></script>
+    
+    <script src="script.js" defer></script>
 </body>
 </html>
-
-
