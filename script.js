@@ -145,7 +145,7 @@ document.getElementById('adForm').addEventListener('submit', async function(even
     const formData = new FormData(document.getElementById('adForm'));
 
     try {
-        const response = await fetch('https://apsnybillboard-production.up.railway.app/api/ad', {
+        const response = await fetch('https://apsnybillboard-production.up.railway.app/api/ad/create', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
